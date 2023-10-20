@@ -1,6 +1,6 @@
 import socket
 
-### set up listening socket
+### SET UP LISTENING SOCKET ###
 server_hostname = socket.gethostname() # change this to the server's hostname/IP address
 server_port = 6060 # change this to the server's port number
 
@@ -15,10 +15,11 @@ s.listen() # listen for connection to client
 connection, address = s.accept() 
 
 
-### Data is exchanged
+### DATA IS EXCHANGED ###
 with connection:
     print(f"Connected by {address}") # see where connection is coming from
     while True: # as long as client is sending data
         data = connection.recv(1024) # will take 1kb of data from client
         if not data: # if no data is received from client, break out of loop
             break
+        connection.sendall(data) # send data back to client
