@@ -11,18 +11,18 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 def main():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(ADDRESS)
+    print(f"[CONNECTED] Client connected to {IP}")
 
     connected = True
     while connected:
-        message = input("Enter a message: ")
+        message = input(">")
+
         client.send(message.encode(FORMAT))
         if message == DISCONNECT_MESSAGE:
             connected = False
         else:
-            response = client.recv(SIZE).decode(FORMAT)
-            print(response)
-
-    client.close()
+            message = client.recv(SIZE).decode(FORMAT)
+            print(f"[SERVER] {message}")
 
 if __name__ == "__main__":
     main()
