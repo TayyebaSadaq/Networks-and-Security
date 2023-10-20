@@ -1,3 +1,7 @@
 {
-    "discord.enabled": true
+    "discord.enabled": true,
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": true,
+    "python.createEnvironment.trigger": "prompt",
+    "python.createEnvironment.contentButton": "show"
 }
