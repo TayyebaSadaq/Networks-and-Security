@@ -1,20 +1,28 @@
 import socket
-import sys
-import time
+import threading #used to handle multiple clients
 
-def main() -> None:
-    host = socket.gethostname()
-    port = 12345
+IP = socket.gethostbyname(socket.gethostname())
+PORT = 5566
+ADDRESS = (IP,PORT)
+SIZE = 1024
+FORMAT = "utf-8"
+DISCONNECT_MESSAGE = "!DISCONNECT"
 
-    #create TCP/IP socket
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        while True:
-            sock.connect((host, port))
-            while True:
-                data = str.encode(sys.argv[1])
-                sock.send(data)
-                time.sleep(0.5)
+def main():
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect(ADDRESS)
+
+    connected = True
+    while connected:
+        message = input("Enter a message: ")
+        client.send(message.encode(FORMAT))
+        if message == DISCONNECT_MESSAGE:
+            connected = False
+        else:
+            response = client.recv(SIZE).decode(FORMAT)
+            print(response)
+
+    client.close()
 
 if __name__ == "__main__":
-    assert len(sys.argv) > 1, "Please provide a message to send."
     main()
