@@ -1,20 +1,21 @@
 import socket
+import sys
+import time
 
-#create socket object
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-#define server's hostname and port
-server_hostname = socket.gethostname() #change this to the server's hostname/IP address
-server_port = 6060 #change this to the server's port number
+def main() -> None:
+    host = socket.gethostname()
+    port = 12345
 
-#connect to the server
-s.connect((server_hostname, server_port))
+    # create a TCP/IP socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        while True:
+            sock.connect((host, port))
+            while True:
+                data = str.encode(sys.argv[1])
+                sock.send(data)
+                time.sleep(0.5)
 
-#receive message from server
-message = s.recv(2848)
-
-#close socket when done
-s.close()
-
-#print received message
-print(f"Message Received: {message.decode('utf-8')}") #decode the message from bytes to string
+if __name__ == "__main__":
+    assert len(sys.argv) > 1, "Please provide message"
+    main()
