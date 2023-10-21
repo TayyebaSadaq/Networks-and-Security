@@ -1,12 +1,21 @@
 import socket
+import sys
+import time
 
-sock = socket.socket()
 
-host = socket.gethostname()
-sock.connect((host, 6060)) # Connect to server
+def main() -> None:
+    host = socket.gethostname()
+    port = 12345
 
-# Or simply omit this line as by default TCP sockets
-# are in blocking mode
+    # create a TCP/IP socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        while True:
+            sock.connect((host, port))
+            while True:
+                data = str.encode(sys.argv[1])
+                sock.send(data)
+                time.sleep(0.5)
 
-data = ("Hello Python\n", *10*1024*1024) # Huge amount of data to be sent
-sock.send(data) # Send data till true
+if __name__ == "__main__":
+    assert len(sys.argv) > 1, ("Please provide message")
+    main()
