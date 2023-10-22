@@ -51,12 +51,12 @@ try:
             message = key.data
             try:
                 message.process_events(mask)
-            except Exception:
+            except Exception: # exceptions raised by the class are caught by the main script
                 print(
                     f"Main: Error: Exception for {message.addr}:\n"
                     f"{traceback.format_exc()}"
                 )
-                message.close()
+                message.close() # make sure that the socket is closed, but message.close() also removes the socket from being monitored by .select()
         # Check for a socket being monitored to continue.
         if not sel.get_map():
             break
