@@ -138,7 +138,7 @@ class Message:
             # Delete reference to socket object for garbage collection
             self.sock = None
 
-    def queue_request(self):
+    def queue_request(self): # request message is created and appended to the send buffer
         content = self.request["content"]
         content_type = self.request["type"]
         content_encoding = self.request["encoding"]
