@@ -1,4 +1,4 @@
 import subprocess
 
-subprocess.run(f"echo hello", shell=True)
+subprocess.run("echo hello", shell=True)
 
