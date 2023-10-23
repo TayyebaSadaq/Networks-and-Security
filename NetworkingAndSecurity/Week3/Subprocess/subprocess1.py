@@ -2,8 +2,9 @@ import subprocess
 
 res = subprocess.run(
     "echo Hello", 
-    shell=True,
-    capture_output = True,
+    shell=True, # run the command in a shell
+    capture_output = True, # capture the output
+    text = True, # convert the output to text
     )
 
 print("------------------")
@@ -12,8 +13,8 @@ print("------------------")
 
 print(*dir(res), sep = "\n") # show all the attributes and methods of the object in a list format (one per line)
 print("------------------")
-print(res.stdout) # None means no output
+print(res.stdout, end = "") # None means no output
 print("------------------")
-print(res.stderr) # None means no error
+print(res.stderr, end = "") # None means no error
 print("------------------") 
 print(res.returncode) # 0 means success, 1 means failure
