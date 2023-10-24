@@ -27,9 +27,9 @@ class FakeDatabase:
     def update(self, name):
         #log a message to indicate the threa is starting the update
         logging.info("Thread %s: starting update", name)
-        #make a local copy of the value to work with 
+        #make a local copy of the value to work with
         local_copy = self.value
-        local_copy += 1 #update the local copy 
+        local_copy += 1 #update the local copy
         time.sleep(0.1) #stimulate some processing time with a sleep 
         self.value = local_copy #update the shared value in the database
         logging.info("Thread %s: finishing update", name)
