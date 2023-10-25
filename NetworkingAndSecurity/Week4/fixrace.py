@@ -40,7 +40,7 @@ if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO,
                         datefmt="%H:%M:%S")
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.debug)
     #create an instance of Fakedatabase
     database = FakeDatabase()
     #log the intial value of the database
