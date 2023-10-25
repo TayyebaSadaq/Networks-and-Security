@@ -25,7 +25,7 @@ class Pipeline(queue.Queue):
 
 def producer(pipeline, event):
     """Pretend we're getting a number from the network."""
-    while not event.is_set():
+    while not event.is_set(): # loop until event is set
         message = random.randint(1, 101)
         logging.info("Producer got message: %s", message)
         pipeline.set_message(message, "Producer")
