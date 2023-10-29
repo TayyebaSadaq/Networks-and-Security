@@ -7,14 +7,14 @@ import threading
 import time
 
 
-class Pipeline(queue.Queue):
+class Pipeline(queue.Queue): # subclass of queue.Queue
     def __init__(self):
         super().__init__(maxsize=10)
 
     def get_message(self, name):
-        logging.debug("%s:about to get from queue", name)
+        logging.debug("%s:about to get from queue", name) # name is consumer or producer
         value = self.get()
-        logging.debug("%s:got %d from queue", name, value)
+        logging.debug("%s:got %d from queue", name, value) 
         return value
 
     def set_message(self, value, name):
@@ -35,10 +35,10 @@ def producer(pipeline, event):
 
 def consumer(pipeline, event):
     """Pretend we're saving a number in the database."""
-    while not event.is_set() or not pipeline.empty():
+    while not event.is_set() or not pipeline.empty(): # loop until event is set or pipeline is empty
         message = pipeline.get_message("Consumer")
         logging.info(
-            "Consumer storing message: %s  (queue size=%s)",
+            "Consumer storing message: %s  (queue size=%s)", # queue size is 0
             message,
             pipeline.qsize(),
         )
