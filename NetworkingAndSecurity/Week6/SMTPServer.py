@@ -22,11 +22,11 @@ class NWSThreadedServer():
         self._modules = []
 
     def _configureServer(self):
-        self._listening_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._listening_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Listening socket
         # Avoid bind() exception: OSError: [Errno 48] Address already in use
-        self._listening_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._listening_socket.bind((self._host, self._port))
-        self._listening_socket.listen()
+        self._listening_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Reuse same socket
+        self._listening_socket.bind((self._host, self._port)) # Bind to the port
+        self._listening_socket.listen() # Listen for incoming connections from clients
 
         print("listening on", (self._host, self._port))
         self._listening_socket.setblocking(False)
