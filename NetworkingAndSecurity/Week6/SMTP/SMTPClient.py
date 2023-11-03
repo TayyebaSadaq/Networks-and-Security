@@ -6,7 +6,7 @@ import socket
 import selectors
 import SMTPClientLib
 
-class NWSThreadedClient ():
+class NWSThreadedClient (): # 
     def __init__(self, host="127.0.0.1", port=12345):
         if __debug__:
             print("NWSThreadedClient.__init__", host, port)
@@ -21,9 +21,9 @@ class NWSThreadedClient ():
 
     def start_connection(self, host, port):
         addr = (host, port)
-        print("starting connection to", addr)
+        print("starting connection to", addr) 
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # 
         sock.setblocking(False)
         sock.connect_ex(addr)
 
