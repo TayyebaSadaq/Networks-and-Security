@@ -1,4 +1,4 @@
-# 🖥️ BScComputerScience
+# 🖥️ Networks and Security Notes
 
 Programming notes for access across machines
 
