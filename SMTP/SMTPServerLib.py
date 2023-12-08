@@ -4,43 +4,44 @@ import SMTPEncryption
 from threading import Thread
 
 class Module(Thread):
-    def __init__(self, sock, addr):
+    def __init__(self, sock, addr): #intialize the module class as a subclass of thread 
         Thread.__init__(self)
 
-        self._selector = selectors.DefaultSelector()
+        self._selector = selectors.DefaultSelector() #create a selctor for I/O multiplexing 
         self._sock = sock
         self._addr = addr
 
         self._incoming_buffer = queue.Queue()
         self._outgoing_buffer = queue.Queue()
 
-        self.encryption = SMTPEncryption.nws_encryption()
+        self.encryption = SMTPEncryption.nws_encryption()  # Create an instance of SMTPEncryption for encryption
         self.running = True
 
         events = selectors.EVENT_READ | selectors.EVENT_WRITE
-        self._selector.register(self._sock, events, data=None)
+        self._selector.register(self._sock, events, data=None)  # Register the socket with the selector for the specified events
 
     def run(self):
-        try:
+        try: #continue running while the module is marked as running 
             while self.running:
                 events = self._selector.select(timeout=None)
-                for key, mask in events:
+                for key, mask in events: #iterate over events
                     try:
+                        #check for read event and call the _read method 
                         if mask & selectors.EVENT_READ:
                             self._read()
                         if mask & selectors.EVENT_WRITE and not self._outgoing_buffer.empty():
                             self._write()
                     except Exception:
                         self.close()
-                if not self._selector.get_map():
+                if not self._selector.get_map(): #if there are no sockets being monitored, break the loop 
                     break
-        except KeyboardInterrupt:
+        except KeyboardInterrupt: #handle a keyboard interrupt by printing a message 
             print("caught keyboard interrupt, exiting")
         finally:
-            self._selector.close()
+            self._selector.close() #close the selctor when the loop exits 
 
     def _read(self):
-        try:
+        try: #attempt to receive data from the socket
             data = self._sock.recv(4096)
         except BlockingIOError:
             print("blocked")
@@ -48,11 +49,13 @@ class Module(Thread):
             pass
         else:
             if data:
+                # If data is received, decrypt it and put it into the incoming buffer
                 self._incoming_buffer.put(self.encryption.decrypt(data.decode()))
             else:
+                # If no data is received, raise a RuntimeError indicating that the peer closed the connection
                 raise RuntimeError("Peer closed.")
 
-        self._process_response()
+        self._process_response() #porcess the response 
 
     def _write(self):
         try:
@@ -61,6 +64,7 @@ class Module(Thread):
             message = None
 
         if message:
+               # If there is an outgoing message, print and attempt to send it to the socket
             print("sending", repr(message), "to", self._addr)
             try:
                 sent = self._sock.send(message)
@@ -69,6 +73,7 @@ class Module(Thread):
                 pass
 
     def _create_message(self, content):
+        # Encrypt the content, encode it, and put it into the outgoing buffer
         encoded = self.encryption.encrypt(content.encode())
         self._outgoing_buffer.put(encoded)
 
@@ -79,6 +84,7 @@ class Module(Thread):
             self._module_processor(message[0:header_length], message[header_length:])
 
     def _module_processor(self, command, message):
+        # Process different commands and generate responses accordingly
         if command == "NOOP":
             self._create_message("250 OK")
             print("Received a NOOP")
@@ -92,11 +98,13 @@ class Module(Thread):
     def close(self):
         print("closing connection to", self._addr)
 
-        self.running = False
+        self.running = False# Set the running flag to False to stop the main loop in the run method
         try:
+             # Unregister the socket from the selector and close the socket
             self._selector.unregister(self._sock)
             self._sock.close()
         except OSError as e:
+            # Print an error message if an OSError occurs during socket operations
             print(
                 f"error: socket.close() exception for",
                 f"{self._addr}: {repr(e)}",

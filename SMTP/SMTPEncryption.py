@@ -3,8 +3,8 @@ class nws_encryption:
         self._enabled = False
         self._method = None
         self._alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!£$%^&*()-+={}[]:;@'<,>.?/\\# "
-        self._caesarkey = None
-        self._vignerekey = None
+        self._caesarkey = None #integer
+        self._vignerekey = None #string 
 
     def toggle_enable(self):
         self._enabled = not self._enabled
@@ -27,6 +27,7 @@ class nws_encryption:
         return self._caesarkey
 
     def set_method(self, method):
+         # Set the encryption method based on the provided method string
         if method.lower() == "caesar":
             self._method = "caesar"
         elif method.lower() == "vigenere":
